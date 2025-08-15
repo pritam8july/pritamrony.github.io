@@ -9,7 +9,8 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { height: 100%; scroll-behavior: smooth; }
     body { 
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      /* Use a classic serif font across the entire site for a professional look */
+      font-family: 'Cambria', serif; 
       overflow-x: hidden; 
       background: #f5f1e0; 
       line-height: 1.6;
@@ -155,11 +156,14 @@
       left: 0;
       width: 250px; 
       height: 100%;
-      transform: translateX(-250px); 
+      /* Leave a small 30px handle visible when collapsed so the user can hover to reveal it */
+      transform: translateX(-220px); 
       transition: transform .3s ease;
       z-index: 1000;
     }
     .sidebar.open { transform: translateX(0); }
+    /* When the user hovers over the sidebar (including the visible handle), slide it fully into view */
+    .sidebar:hover { transform: translateX(0); }
     .sidebar ul {
       list-style: none;
       padding: 80px 30px;
@@ -530,6 +534,8 @@
       cursor: pointer; 
       z-index: 1001;
       transition: all 0.3s ease;
+      /* Hide the old sidebar toggle button since hover now controls the sidebar */
+      display: none;
     }
     .sidebar-toggle:hover {
       padding: 8px 15px;
@@ -554,6 +560,10 @@
       gap: 5px;
       font-weight: 500;
       box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    /* Hide the mobile view toggle button since the site adapts automatically */
+    .mobile-toggle {
+      display: none !important;
     }
     .mobile-toggle:hover {
       background: #3a7bd5;
@@ -731,9 +741,9 @@
       transform: translate(-50%, -50%) scale(0.6);
     }
     
-    /* Hide Default Cursor */
+    /* Restore the default cursor */
     html {
-      cursor: none;
+      cursor: default;
     }
 
     /* Mobile-specific styles */
@@ -752,7 +762,8 @@
       /* Sidebar adjustments */
       .sidebar {
         width: 280px;
-        transform: translateX(-280px);
+        /* Leave a 30px handle visible on mobile as well */
+        transform: translateX(-250px);
       }
       
       /* Section padding */
@@ -921,9 +932,199 @@
         padding: 1.5rem;
       }
     }
+
+    /* ------------------------------------------------------------------ */
+    /* Custom modifications to improve performance and usability          */
+    /* Hide heavy decorative backgrounds and cursors to eliminate lag    */
+    .floating-shapes,
+    #particles,
+    .custom-cursor {
+      display: none !important;
+    }
+
+    /* Collapsible gallery: when the 'collapsed' class is applied the
+       gallery cards are hidden */
+    .gallery-grid.collapsed {
+      display: none;
+    }
+
+    /* Navigation handle to make the sidebar obvious when collapsed */
+    .nav-handle {
+      position: absolute;
+      top: 50%;
+      right: -30px;
+      transform: translateY(-50%) rotate(90deg);
+      transform-origin: right center;
+      font-size: 0.9rem;
+      color: #fff;
+      background: #007acc;
+      padding: 4px 6px;
+      border-radius: 0 5px 5px 0;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .dark-theme .nav-handle {
+      background: #b00020;
+    }
+
+    /* Navigation bar colors for light and dark themes */
+    .sidebar {
+      background: #007acc;
+    }
+    .dark-theme .sidebar {
+      background: #330000;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Theme colour overrides                                            */
+    /* Light theme uses a soft blue palette while dark theme is black/red */
+    body {
+      background: #e6f3ff;
+      color: #333;
+    }
+    .section {
+      background: rgba(255, 255, 255, 0.9);
+    }
+    .gallery-title {
+      background: linear-gradient(90deg, #007acc, #00aaff, #006bb3, #004080);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .gallery-title::after {
+      background: linear-gradient(90deg, #007acc, #00aaff, #006bb3, #004080);
+    }
+    /* Dark theme overrides */
+    body.dark-theme {
+      background: #000;
+      color: #f5f5f5;
+    }
+    .dark-theme .section,
+    .dark-theme .gallery-card {
+      background: #111;
+    }
+    .dark-theme .section-heading,
+    .dark-theme .gallery-title {
+      color: #ff5555;
+    }
+    .dark-theme .gallery-title {
+      background: linear-gradient(90deg, #ff5555, #e63946, #d62828, #a4161a);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .dark-theme .gallery-title::after {
+      background: linear-gradient(90deg, #ff5555, #e63946, #d62828, #a4161a);
+    }
+
+    /* Improve readability of captions in dark theme */
+    .dark-theme .gallery-caption h3,
+    .dark-theme .gallery-caption p {
+      color: #f5f5f5;
+    }
+
+    /* Remove decorative section dividers */
+    .custom-shape-divider {
+      display: none;
+    }
+
+    /* Apply a z-axis transition to cards when they enter or leave the viewport.
+       Include all major cards: about boxes, education, experience, research locations,
+       findings, gallery, skills, publications, and projects. */
+    .gallery-card,
+    .education-card,
+    .experience-card,
+    .skill-card,
+    .publication-card,
+    .about-box,
+    .location-card,
+    .finding-card,
+    .project-card {
+      transition: transform 0.6s ease, box-shadow 0.6s ease;
+      transform-style: preserve-3d;
+      transform: perspective(1000px) translateZ(0);
+    }
+    .gallery-card.in-view,
+    .education-card.in-view,
+    .experience-card.in-view,
+    .skill-card.in-view,
+    .publication-card.in-view,
+    .about-box.in-view,
+    .location-card.in-view,
+    .finding-card.in-view,
+    .project-card.in-view {
+      transform: perspective(1000px) translateZ(40px);
+      box-shadow: 0 20px 30px rgba(0,0,0,0.2);
+    }
+
+    /* Colour of subheadings (e.g., Methodology) */
+    #research h3 {
+      color: #007acc;
+    }
+    .dark-theme #research h3 {
+      color: #ff5555;
+    }
+
+    /* Apply the Satisfy font to all header elements for a handwritten style */
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Satisfy', cursive;
+    }
+
+    /* Ensure body copy uses Cambria consistently */
+    body, p, li, span, .section-text {
+      font-family: 'Cambria', serif;
+    }
+
+    /* Theme toggle button colours */
+    .theme-toggle {
+      background: #007acc;
+      color: #fff;
+    }
+    .dark-theme .theme-toggle {
+      background: #b00020;
+      color: #fff;
+    }
+
+    /* Ensure research and publications sections have appropriate text colours */
+    body:not(.dark-theme) #research,
+    body:not(.dark-theme) #publications {
+      color: #333;
+    }
+    body.dark-theme #research,
+    body.dark-theme #publications {
+      color: #ddd;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Font overrides to satisfy user requirements                        */
+    /* Force all primary headings within special sections (education,
+       experience, skills, research and projects) to use the Satisfy font,
+       overriding any section-specific font declarations. Likewise ensure
+       subheadings and metadata use Cambria for body copy. */
+    .education-section h3,
+    .experience-section h3,
+    .skills-section h3,
+    .research-section h3,
+    .projects-section h3 {
+      font-family: 'Satisfy', cursive !important;
+    }
+    .education-section p,
+    .education-section span,
+    .experience-section p,
+    .experience-section span,
+    .research-section p,
+    .research-section span,
+    .skills-section p,
+    .skills-section span,
+    .projects-section p,
+    .projects-section span {
+      font-family: 'Cambria', serif !important;
+    }
+
   </style>
   <!-- Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <!-- Google Font for headers (Satisfy for a handwritten look) -->
+  <link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet">
 </head>
 <body>
   
@@ -937,8 +1138,8 @@
   <!-- Particle Background -->
   <canvas id="particles"></canvas>
 
-  <!-- Theme Toggle Button -->
-  <button onclick="toggleTheme()" class="theme-toggle">Toggle Theme</button>
+  <!-- Theme Toggle Button: displays a moon icon to indicate the theme switcher -->
+  <button onclick="toggleTheme()" class="theme-toggle"><i class="fas fa-moon"></i></button>
   
   <!-- Mobile View Toggle Button -->
   <button onclick="toggleMobileView()" class="mobile-toggle">
@@ -951,6 +1152,8 @@
 
   <!-- Sidebar Navigation -->
   <nav class="sidebar" id="sidebar">
+    <!-- Visible handle on the collapsed navigation bar to indicate it can be opened -->
+    <div class="nav-handle">Menu</div>
     <ul>
       <li><a href="#about" onclick="toggleSidebar()">👤 About</a></li>
       <li><a href="#research" onclick="toggleSidebar()">🔬 Research</a></li>
@@ -973,7 +1176,7 @@
 
   <!-- About Section -->
   <div class="section-entry" id="about-section-entry"></div>
-  <section id="about" style="position: relative; padding: 5rem 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+  <section id="about" style="position: relative; padding: 5rem 0; overflow: hidden; font-family: 'Cambria', serif;">
     <style>
       .about-container {
         position: relative;
@@ -1993,7 +2196,26 @@
           </div>
 
           <h3 style="margin: 25px 0 15px; color: var(--accent-color); font-weight: 600; position: relative; padding-left: 15px;">Methodology</h3>
-          <p style="margin-bottom: 15px; color: var(--text-color);">Field sampling is conducted at five strategic locations during both wet and dry seasons:</p>
+          <p style="margin-bottom: 15px; color: var(--text-color);">
+            Water and sediment sampling across the Nueces/Corpus Christi Bay follows a rigorous
+            protocol. All collection bottles and jars are pre‑cleaned by soaking in laboratory
+            detergent, rinsing, soaking in a 10&nbsp;% nitric acid solution and rinsing again with
+            de‑ionised water. At each site, powder‑free gloves are worn, bottles are rinsed
+            three times with site water, and three replicate water samples are collected by
+            moving upstream to minimise disturbance of suspended sediments. Samples are
+            transferred into amber glass jars with Teflon®‑lined lids, kept on ice and
+            transported to the laboratory. Sediment samples are collected using a non‑reactive
+            stainless‑steel scoop and stored in the same way. Analytical measurements are
+            carried out using a YSI ProDSS meter for field pH, temperature, conductivity,
+            salinity, total dissolved solids and dissolved oxygen; a V‑1200 spectrophotometer
+            for ammonium and total phosphorus; ion chromatography for nitrate, nitrite and
+            phosphate; inductively coupled plasma mass spectrometry (ICP‑MS) for heavy
+            metals; vacuum filtration followed by oven‑drying for suspended sediment
+            concentration; gas chromatography for pesticides; mechanical sieving and
+            hydrometer methods for grain‑size distribution; and loss‑on‑ignition for organic
+            carbon content. Sampling locations include Labonte Park, Nueces Bay, Sgt.&nbsp;J.D.&nbsp;Bock Park,
+            Sugar Tree Apartments and Ennis Joslin Road.
+          </p>
           <div class="research-grid">
             <div class="location-card">
               <div class="location-number">1</div>
@@ -2435,6 +2657,30 @@
     </div>
   </section>
 
+  <!-- Game Section -->
+  <div class="section-entry" id="game-section-entry"></div>
+  <section id="game" class="scroll-reveal">
+    <div class="container">
+      <div class="section">
+        <h2 class="section-heading">Water Quality Quiz Game</h2>
+        <p class="section-text">Test your knowledge about water quality with this short quiz.</p>
+        <div id="quiz-container">
+          <button id="startQuizBtn" style="margin-bottom:20px;padding:10px 20px;background-color:#4a8fe7;color:#fff;border:none;border-radius:5px;cursor:pointer;font-family: inherit;">Start Quiz</button>
+          <div id="question-container" style="display:none;">
+            <h3 id="question" style="margin-bottom:15px;"></h3>
+            <div id="options"></div>
+            <!-- Explanation for the current question will appear here -->
+            <div id="explanation" style="margin-top:15px; display:none; font-size:0.9rem;"></div>
+            <button id="nextBtn" style="margin-top:20px;padding:8px 16px;background-color:#ffdd57;color:#333;border:none;border-radius:5px;cursor:pointer;font-family: inherit; display:none;">Next Question</button>
+          </div>
+          <div id="result-container" style="display:none; margin-top:20px;">
+            <h3 id="result"></h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Section Divider -->
   <div class="custom-shape-divider">
     <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
@@ -2761,7 +3007,10 @@
     <div class="container">
       <div class="section">
         <h2 class="gallery-title">Research Gallery</h2>
-        <div class="gallery-grid">
+        <!-- Button to collapse/expand the gallery. Initially the gallery is visible. -->
+        <button id="toggleGalleryBtn" style="margin-bottom:20px;padding:10px 20px;background-color:#ffdd57;color:#333;border:none;border-radius:5px;cursor:pointer;font-family: inherit;">Hide Gallery</button>
+
+        <div class="gallery-grid" id="galleryGrid">
           <div class="gallery-card">
             <img src="WhatsApp Image 2025-03-14 at 5.04.40 PM.jpg" alt="Field Research" class="gallery-img">
             <div class="gallery-caption">
@@ -2802,6 +3051,29 @@
             <div class="gallery-caption">
               <h3>Conference Presentation</h3>
               <p>Sharing research findings at UCOWR 2025</p>
+            </div>
+          </div>
+
+          <!-- Additional gallery items to enrich the gallery -->
+          <div class="gallery-card">
+            <img src="placeholder_light_gray_block.png" alt="Water Quality Modeling" class="gallery-img">
+            <div class="gallery-caption">
+              <h3>Water Quality Modeling</h3>
+              <p>Visualizing simulated contaminant transport in the bay</p>
+            </div>
+          </div>
+          <div class="gallery-card">
+            <img src="placeholder_light_gray_block.png" alt="Community Outreach" class="gallery-img">
+            <div class="gallery-caption">
+              <h3>Community Outreach</h3>
+              <p>Educating locals about sustainable water practices</p>
+            </div>
+          </div>
+          <div class="gallery-card">
+            <img src="placeholder_light_gray_block.png" alt="Sampling Equipment" class="gallery-img">
+            <div class="gallery-caption">
+              <h3>Sampling Equipment</h3>
+              <p>Overview of instruments used for water quality monitoring</p>
             </div>
           </div>
         </div>
@@ -2875,7 +3147,7 @@
 
   <script>
     // Typewriter Effect
-    const typewriterText = "Pritam Karmakar Rony\nCivil & Environmental Engineer | NSF Fellow |\n Researcher\nWater Resources Specialist";
+    const typewriterText = "Pritam Karmakar Rony\nCivil & Environmental Engineer | NSF Fellow | Researcher\nWater Resources Specialist";
     const typewriterElement = document.getElementById('typewriter');
     let i = 0;
     
@@ -3054,7 +3326,8 @@
     canvas.height = window.innerHeight;
     
     const particles = [];
-    const particleCount = window.innerWidth / 5;
+    // Set the particle count to zero to disable the animated background and reduce CPU usage
+    const particleCount = 0;
     
     class Particle {
       constructor() {
@@ -3114,7 +3387,10 @@
     }
     
     initParticles();
-    animateParticles();
+    // Only animate particles when there are particles to animate
+    if (particleCount > 0) {
+      animateParticles();
+    }
     
     window.addEventListener('resize', () => {
       canvas.width = window.innerWidth;
@@ -3135,6 +3411,8 @@
     // Custom Cursor Animation
     document.addEventListener('DOMContentLoaded', function() {
       const cursor = document.querySelector('.custom-cursor');
+      // Skip cursor logic entirely if the custom cursor element isn't present
+      if (!cursor) return;
       let mouseX = 0, mouseY = 0;
       let cursorX = 0, cursorY = 0;
       const delay = 0.1; // Smoothing factor (0-1)
@@ -3177,6 +3455,158 @@
 
     // Start typewriter effect when page loads
     window.addEventListener('load', typeWriter);
+  </script>
+
+  <!-- Additional script for gallery toggle and quiz game -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      /* Gallery collapse/expand functionality */
+      const galleryBtn = document.getElementById('toggleGalleryBtn');
+      const galleryGrid = document.getElementById('galleryGrid');
+      if (galleryBtn && galleryGrid) {
+        galleryBtn.addEventListener('click', function() {
+          galleryGrid.classList.toggle('collapsed');
+          this.textContent = galleryGrid.classList.contains('collapsed') ? 'Show Gallery' : 'Hide Gallery';
+        });
+      }
+
+      /* Simple quiz game logic */
+      const startBtn = document.getElementById('startQuizBtn');
+      const questionContainer = document.getElementById('question-container');
+      const nextBtn = document.getElementById('nextBtn');
+      const resultContainer = document.getElementById('result-container');
+      const resultDisplay = document.getElementById('result');
+      const questionDisplay = document.getElementById('question');
+      const optionsDiv = document.getElementById('options');
+      const explanationDiv = document.getElementById('explanation');
+      const quizQuestions = [
+        {
+          question: 'What does a low dissolved oxygen level in water indicate about its quality?',
+          options: [
+            'Healthy aquatic life',
+            'Possible pollution or eutrophication',
+            'High alkalinity',
+            'Freezing temperatures'
+          ],
+          answer: 1,
+          explanation: 'Low dissolved oxygen often results from excess organic matter decomposition or nutrient pollution, which can lead to fish kills and eutrophication.',
+          reference: 'https://www.epa.gov/national-aquatic-resource-surveys/indicator-dissolved-oxygen'
+        },
+        {
+          question: 'Which of the following best describes turbidity in water quality testing?',
+          options: [
+            'Measure of water\'s acidity',
+            'Measure of clarity or cloudiness of water',
+            'Measure of salinity',
+            'Measure of temperature'
+          ],
+          answer: 1,
+          explanation: 'Turbidity measures how clear water is by quantifying the scattering of light caused by suspended particles.',
+          reference: 'https://www.usgs.gov/special-topic/water-quality/science/turbidity'
+        },
+        {
+          question: 'Why are nitrates and phosphates important to monitor in water bodies?',
+          options: [
+            'They help reduce algae growth',
+            'Excessive amounts can cause harmful algal blooms',
+            'They increase dissolved oxygen levels',
+            'They are inert and have no impact'
+          ],
+          answer: 1,
+          explanation: 'High concentrations of nitrates and phosphates from agricultural runoff or sewage lead to eutrophication and harmful algal blooms.',
+          reference: 'https://www.epa.gov/nutrient-policy-data/cyanobacterial-harmful-algal-blooms-habs'
+        }
+      ];
+      let currentQuestionIndex = 0;
+      let score = 0;
+
+      function showQuestion() {
+        if (currentQuestionIndex >= quizQuestions.length) {
+          questionContainer.style.display = 'none';
+          resultContainer.style.display = 'block';
+          resultDisplay.textContent = 'You scored ' + score + ' out of ' + quizQuestions.length + '!';
+          return;
+        }
+        const current = quizQuestions[currentQuestionIndex];
+        questionDisplay.textContent = current.question;
+        // Reset options and explanation for new question
+        optionsDiv.innerHTML = '';
+        if (explanationDiv) {
+          explanationDiv.innerHTML = '';
+          explanationDiv.style.display = 'none';
+        }
+        current.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.textContent = opt;
+          btn.style.display = 'block';
+          btn.style.marginBottom = '10px';
+          btn.style.padding = '8px 12px';
+          btn.style.backgroundColor = '#e0e0e0';
+          btn.style.border = 'none';
+          btn.style.borderRadius = '4px';
+          btn.style.cursor = 'pointer';
+          btn.style.fontFamily = 'inherit';
+          btn.addEventListener('click', function() {
+            // Highlight selected answer
+            if (idx === current.answer) {
+              btn.style.backgroundColor = '#c8e6c9';
+              score++;
+            } else {
+              btn.style.backgroundColor = '#ff8a80';
+            }
+            // Disable all buttons after selection
+            Array.from(optionsDiv.children).forEach(b => b.disabled = true);
+            // Show explanation with reference for the current question
+            if (explanationDiv) {
+              let refLink = '';
+              if (current.reference) {
+                refLink = ' <a href="' + current.reference + '" target="_blank" style="color: #007acc; text-decoration: underline;">source</a>';
+              }
+              explanationDiv.innerHTML = current.explanation + (refLink ? '<br><em>Reference:</em>' + refLink : '');
+              explanationDiv.style.display = 'block';
+            }
+            nextBtn.style.display = 'inline-block';
+          });
+          optionsDiv.appendChild(btn);
+        });
+        nextBtn.style.display = 'none';
+      }
+
+      if (startBtn) {
+        startBtn.addEventListener('click', function() {
+          startBtn.style.display = 'none';
+          questionContainer.style.display = 'block';
+          resultContainer.style.display = 'none';
+          currentQuestionIndex = 0;
+          score = 0;
+          showQuestion();
+        });
+      }
+
+      if (nextBtn) {
+        nextBtn.addEventListener('click', function() {
+          currentQuestionIndex++;
+          showQuestion();
+        });
+      }
+
+      /* Observe cards and apply a z-axis translation when they enter or leave the viewport.
+         Include about boxes, location cards, finding cards and project cards so that
+         scrolling up and down triggers the transition repeatedly. */
+      const zCards = document.querySelectorAll(
+        '.gallery-card, .education-card, .experience-card, .skill-card, .publication-card, .about-box, .location-card, .finding-card, .project-card'
+      );
+      const zObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+          } else {
+            entry.target.classList.remove('in-view');
+          }
+        });
+      }, { threshold: 0.1 });
+      zCards.forEach(card => zObserver.observe(card));
+    });
   </script>
 </body>
 </html>
