@@ -1021,6 +1021,11 @@
       color: #f5f5f5;
     }
 
+    /* Ensure conference section background matches dark theme */
+    body.dark-theme #conference {
+      background: #000 !important;
+    }
+
     /* Remove decorative section dividers */
     .custom-shape-divider {
       display: none;
@@ -1037,7 +1042,8 @@
     .about-box,
     .location-card,
     .finding-card,
-    .project-card {
+    .project-card,
+    .paper-card {
       transition: transform 0.6s ease, box-shadow 0.6s ease;
       transform-style: preserve-3d;
       transform: perspective(1000px) translateZ(0);
@@ -1050,7 +1056,8 @@
     .about-box.in-view,
     .location-card.in-view,
     .finding-card.in-view,
-    .project-card.in-view {
+    .project-card.in-view,
+    .paper-card.in-view {
       transform: perspective(1000px) translateZ(40px);
       box-shadow: 0 20px 30px rgba(0,0,0,0.2);
     }
@@ -1068,9 +1075,9 @@
       font-family: 'Satisfy', cursive;
     }
 
-    /* Ensure body copy uses Cambria consistently */
+    /* Ensure body copy uses the Dreaming Outloud Pro font consistently */
     body, p, li, span, .section-text {
-      font-family: 'Cambria', serif;
+      font-family: 'Dreaming Outloud Pro', serif;
     }
 
     /* Theme toggle button colours */
@@ -1091,6 +1098,14 @@
     body.dark-theme #research,
     body.dark-theme #publications {
       color: #ddd;
+    }
+
+    /* Override text color variables for light theme in research and publications sections */
+    body:not(.dark-theme) #research {
+      --text-color: #333;
+    }
+    body:not(.dark-theme) #publications {
+      --text-color: #333;
     }
 
     /* ------------------------------------------------------------------ */
@@ -1116,7 +1131,7 @@
     .skills-section span,
     .projects-section p,
     .projects-section span {
-      font-family: 'Cambria', serif !important;
+      font-family: 'Dreaming Outloud Pro', serif !important;
     }
 
   </style>
@@ -1125,6 +1140,8 @@
 
   <!-- Google Font for headers (Satisfy for a handwritten look) -->
   <link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet">
+  <!-- Google Font for body text (Dreaming Outloud Pro) -->
+  <link href="https://fonts.googleapis.com/css2?family=Dreaming+Outloud+Pro&display=swap" rel="stylesheet">
 </head>
 <body>
   
@@ -1176,7 +1193,7 @@
 
   <!-- About Section -->
   <div class="section-entry" id="about-section-entry"></div>
-  <section id="about" style="position: relative; padding: 5rem 0; overflow: hidden; font-family: 'Cambria', serif;">
+  <section id="about" style="position: relative; padding: 5rem 0; overflow: hidden; font-family: 'Dreaming Outloud Pro', serif;">
     <style>
       .about-container {
         position: relative;
@@ -3594,7 +3611,7 @@
          Include about boxes, location cards, finding cards and project cards so that
          scrolling up and down triggers the transition repeatedly. */
       const zCards = document.querySelectorAll(
-        '.gallery-card, .education-card, .experience-card, .skill-card, .publication-card, .about-box, .location-card, .finding-card, .project-card'
+        '.gallery-card, .education-card, .experience-card, .skill-card, .publication-card, .paper-card, .about-box, .location-card, .finding-card, .project-card'
       );
       const zObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
